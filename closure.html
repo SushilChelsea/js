@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Closure</title>
+	<link rel="stylesheet" type="text/css" href="style.css">
+	<script type="text/javascript" src="script.js" defer></script>
+</head>
+<body>
+	<div class="root">
+		<div class="def">
+			<h1>What is Closure? <a href="index.html" style="float: right; margin-right: 20px;">Home</a></h1>
+			<p><i>Recall <mark>Nested function:</mark> function created inside another function.</i></p>
+			<p>
+				<mark>=></mark> 
+				A closure is the combination of a function bundle together (enclosed) with reference to its surrounding state (Lexical Environment).<br> In other words, a closure give you access to outer function's scope from an inner function.<br> In JavaScript closures are created everytime a function is created, at a function creation time. <br>
+				Whenever a inner function is return, lexical scope of its outer function is as well return this is a closure.
+			</p>
+			<img src="img/closure.png" alt="pictorial illustration" width="1000" height="600" title="Green rectangle box is a closure">
+			<br>
+			<pre>
+				<code>
+					const firstname = 'Tina';
+					function makeFunc() {
+						const lastname = 'Xing'; // free variable
+						function display(greeting) {
+							console.log(`${greeting} from ${firstname} ${lastname}`);
+						}
+						return display;
+					}
+
+					const myFunc = makeFunc();
+					myFunc('Hello'); // Hello from Tina Xing
+				</code>
+			</pre>
+			<br>
+			<p>
+				<b>Free Variable</b><br>
+				Free variable are those variables that are neither (locally declared, passed as parameter) nor in global environment. 
+			</p>
+		</div>
+	</div>
+</body>
+</html>

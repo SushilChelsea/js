@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>this keyword</title>
+	<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+	<div class="root">
+		<div class="this-keyword">
+			<h1>JS Famous "this" keyword <a href="index.html" style="float: right; margin-right: 20px;">Home</a></h1>
+			<br>
+			<p>
+				<mark>=></mark> A function's this keyword behaves a little differently in JavaScript compared to other languages.<br>
+				It also has some differences between strict mode and non-strict mode
+			</p>
+			<p>
+				In most cases, the value of <code>this</code> is determined by how a function is called (runtime binding). It can't be set by assignment during execution, and it may be different each time the function is called. The Function.prototype.bind() method can set the value of a function's <code>this</code> regardless of how it's called, and arrow functions don't provide their own <code>this</code> binding (it retains the <code>this</code> value of the enclosing lexical context).
+			</p>
+			<br>
+			<div class="context">
+				<div class="global">
+					<h3>Global Context</h3>
+					<p>
+						<mark>=></mark> In the global context (outside of any function), <code>this</code> refers to global object whether in strict mode or not. <br>
+						<code>
+							console.log(this === window);	// true
+						</code>
+					</p>
+						
+
+					<h3>Function Context</h3>
+					<p>
+						=> the value of <code>this</code> depend on how the function is called. <br>
+						=> In non-strict mode, the value of <code>this</code> will be global object (window object in browser) because it is not set by the call. <br>
+						<pre>
+						<code>
+							function foo() {
+								console.log(this === window);	// true	
+							}
+							foo();
+						</code> 
+						</pre><br>
+						=> In strict mode, however, if the value of <code>this</code> is not set when entiring an execution context, it remains as <code>undefined</code> <br>
+						<pre>
+						<code>
+							function foo() {
+								console.log(this === window);	// false	
+							}
+							foo();
+						</code> 
+						</pre><br>
+					</p>
+				</div>
+			</div>
+			<br>
+			<p>
+				<code>this</code> can't be assigned during execution, throws SyntaxError <br>
+				<code>> this = 123; //  Left side of assignment is not a reference.</code>
+			</p>
+			<br>
+			<div class="func-invoke">
+				<h3>3 ways to invoke function in JS</h3>
+				<p>
+					1. functionName(); <br>
+					2. functionName.call(); <br>
+					3. functionName.apply(); <br>
+				</p>
+				<br>
+				<h5>Example</h5>
+				<pre>
+					<code>
+						function foo(arg1, arg2) {
+							console.log("this =>", this);
+							console.log(arg1, arg2);
+						}
+
+						foo('a', 'b');
+						// this => Window {...}
+						// a b
+
+						foo.call('Hello', 1, 2);
+						// this => String {'Hello'}
+						// 1 2
+
+						foo.apply({x:1, y:2}, ['a', 'b']);
+						// this => {x:1, y:2}
+						// a b
+
+						foo.bind(12)(22, 33); // binds argument to this and returns a function, so need to call with func arg
+						// this => Number {12}
+						// 22 33
+					</code>
+				</pre>
+			</div>
+
+			<br>
+			<div class="arrow-func">
+				<h3>arrow function</h3>
+				<p>
+					=> arrow function doesnot have its <code>this</code> value. <br>
+					=> arrow function doesnot have its <code>arguments</code> parameter.
+				</p>
+				<p>
+					<br>
+					<h4>Example</h4>
+					<pre>
+						const func = () => {
+							console.log(this); // Window {...} because the outer surrounding value of 'this' is window object
+						}
+						func();
+					</pre>
+					<pre>
+						const func = () => {
+							console.log(arguments); // Uncaught ReferenceError: arguments is not defined
+						}
+						func();
+					</pre>
+
+					<code>this, arguments</code> value inside arrow function is same as of its outer scope.
+					<br>
+					In non-strict mode
+					<pre>
+						function outer() {
+							console.log(this); // Window object
+							const func = () => {
+								console.log(this); // Window object
+							}
+						}
+						outer();
+					</pre>
+					<br>
+					In strict mode
+					<pre>
+						"use strict";
+						function outer() {
+							console.log(this); // undefined
+							console.log(arguments); // Arguments(3) [1, 2, 3]
+							const func = () => {
+								console.log(this); // undefined
+								console.log(arguments); // Arguments(3) [1, 2, 3]
+							}
+							func(6, 7, 8);
+						}
+						outer(1, 2, 3);
+					</pre>
+				</p>
+			</div>
+
+			<br>
+			<div class="function-binding">
+				<h3>Function Binding</h3>
+				<p>
+					When passing object method as a callbacks, for instance to setTimeout there's a known problem: "losing <code>this</code>" <br> <br>
+					<mark>Solution:</mark> <br> 
+					1. Wrapper <br>
+					2. bind <br>
+					3. call + Wrapper <br>
+					4. apply + Wrapper 
+				</p>
+				<p>
+					Problem losing <code>this</code> Example:
+					<pre>
+						<code>
+							const user = {
+								firstname: "Tina",
+								lastname: "Xing",
+								getFullName: function() {
+									console.log(this);
+									console.log(`${this.firstname} ${this.lastname}`);
+								}
+							}
+							setTimeout(user.getFullName, 2000);
+							// OUTPUT
+							// Window object
+							// undefined undefined
+
+						</code>
+					</pre>
+					<mark>Explanation:</mark> setTimeout is a function inside window object, so <code>this</code> value is window object and <br>
+					window object doesnot have variable firstname, lastname hence undefined.
+					<br>
+					<p>
+						In javascript, function is an object that is stored in heap memory with a refrence pointing to it.
+						So, when we pass function refrence (in our case 'user.getFullName' in setTimeout) it will directly point
+						to the function object in heap memory not through the 'user' object so 'user' <code>this</code> is lost and setTimeout is called with the window object so <code>this</code> is window object now.
+					</p>
+
+				</p>
+				<p>
+					<b>1. Wrapper</b>
+					<pre>
+						<code>
+							setTimeout(() => user.getFullName(), 2000);
+							// OUTPUT
+							// user object
+							// Tina Xing
+						</code>
+					</pre>
+					setTimeout will execute callback function after 2 sec and the statement inside this function.
+					<br>
+					<br>
+					<b>2. Bind</b>
+					<pre>
+						<code>
+							setTimeout(user.getFullName.bind(user), 3000);
+							// OUTPUT
+							// user object
+							// Tina Xing
+						</code>
+					</pre>
+
+					<br>
+					<b>3. Wrapper + call</b>
+					<pre>
+						<code>
+							setTimeout(() => user.getFullName.call(user), 4000);
+							// OUTPUT
+							// user object
+							// Tina Xing
+						</code>
+					</pre>
+
+					<br>
+					<b>4. Wrapper + apply</b>
+					<pre>
+						<code>
+							setTimeout(() => user.getFullName.apply(user), 5000);
+							// OUTPUT
+							// user object
+							// Tina Xing
+						</code>
+					</pre>
+				</p>
+			</div>
+
+			<br>
+			<div class="when">
+				<h3>When to use arrow function</h3>
+				<p>
+					=> More suitable for non-method function. <br>
+					<pre>
+						Problem:
+						<code>
+							const user = {
+								firstname: "Tina",
+								lastname: "Xing",
+								arrowFunc: () => {
+									console.log(`${this.firstname} ${this.lastname}`);
+								}
+							}
+
+							user.arrowFunc(); // arrow function doesnot have its own this keyword
+							// OUTPUT
+							// undefined undefined
+						</code>
+					</pre>
+
+					<br>
+					<mark>Note:</mark> Use arrow function when you do not need to use <code>this</code> keyword related to object.
+				</p>
+				<h4>Use Case</h4>
+				<pre>
+					<code>
+						const user = {
+							firstname: "Tina",
+							languages: ['javaSE', 'javaEE', 'SpringCore', 'SpringSecurity', 'javascript', 'React', 'NodeJS', 'Angular'],
+							printLanguages: function() {
+								console.log(this); // user object
+								this.languages.forEach(function(lang) {
+									console.log(this);	// window object
+									console.log(`Miss ${this.firstname} teach ${lang}`);
+								})
+							}
+						}
+						user.printLanguages();
+						// OUTPUT
+						// Miss undefined teach javaSE (so on  'this.firstname' is undefined)
+						// because function(lang){ ... } is not called by programmer code instead its get called by window object 
+
+					</code>
+				</pre>
+				Solution would be to use <mark>arrow function</mark>
+				<pre>
+					<code>
+						const user = {
+							firstname: "Tina",
+							languages: ['javaSE', 'javaEE', 'SpringCore', 'SpringSecurity', 'javascript', 'React', 'NodeJS', 'Angular'],
+							printLanguages: function() {
+								console.log(this); // user object
+								<mark>this.languages.forEach((lang) => {</mark>
+									console.log(this);	// user object
+									console.log(`Miss ${this.firstname} teach ${lang}`);
+								})
+							}
+						}
+						user.printLanguages();
+						// OUTPUT
+						// Miss Tina teach javaSE 
+						// Miss Tina teach javaEE 
+						// and so on...
+					</code>
+				</pre>
+			</div>
+		</div>
+	</div>
+	<script>
+		// "use strict";
+
+
+		function foo(arg1, arg2) {
+			console.log("this =>", this);
+			console.log(arg1, arg2);
+		}
+		// foo('a', 'b');
+		// this => Window {...}
+		// a b
+
+		// foo.call('Hello', 1, 2);
+		// this => String {'Hello'}
+		// 1 2
+		// console.log(this); // Window Object
+
+		// foo.apply({x:1, y:2}, ['a', 'b']);
+		// this => {x:1, y:2}
+		// a b
+
+		// foo.bind(12)(22, 33); // bind method binds argument to this and returns a function, so need to call with func arg
+		// this => Number {12}
+		// 22 33
+
+		/* arrow function */
+		function outer() {
+			console.log(this);	// undefined
+			console.log(arguments); // Arguments(3) [1, 2, 3]
+			const func = () => {
+				console.log(this); // undefined
+				console.log(arguments); // Arguments(3) [1, 2, 3]
+			}
+			func(6, 7, 8);
+		}
+		// outer(1, 2, 3); 
+
+		console.log("------ losing this ------ ");
+
+		const user = {
+			firstname: "Tina",
+			lastname: "Xing",
+			languages: ['javaSE', 'javaEE', 'SpringCore', 'SpringSecurity', 'javascript', 'React', 'NodeJS', 'Angular'],
+			getFullName: function(greeting, end) {
+				console.log(this);
+				console.log(`${greeting} from ${this.firstname} ${this.lastname} ${end}`);
+			},
+			arrowFunc: () => {
+				console.log(`${this.firstname} ${this.lastname}`);
+			},
+			testFunc: function() {
+				const bar = () => { console.log(`${this.firstname} ${this.lastname}`) };
+				bar();
+			},
+			printLanguages: function() {
+				// console.log(this); // user object
+				this.languages.forEach((lang) => {
+					// console.log(this);	// window object
+					console.log(`Miss ${this.firstname} teach ${lang}`);
+				})
+			}
+		}
+		// setTimeout(user.getFullName, 2000);
+		// setTimeout(() => user.getFullName('Hi', '-------'), 2000);	// wrapper
+		// setTimeout(user.getFullName.bind(user, 'Hello', '!!!!!'), 3000); // bind
+		// setTimeout(() => user.getFullName.call(user, 'Namaste', '*****'), 4000); // wrapper + call
+		// setTimeout(() => user.getFullName.apply(user, ['Salam', '#####']), 5000); // wrapper + apply
+
+
+		// user.arrowFunc();	// arrow function doesnot have its own this keyword
+		// user.testFunc();	//  Tina Xing, because this value inside arrow func is of its surrounding outer object.
+		user.printLanguages();
+	</script>
+</body>
+</html>

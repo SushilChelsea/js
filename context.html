@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Javascript Execution Context</title>
+	<link rel="stylesheet" type="text/css" href="style.css">
+	<script type="text/javascript" src="script.js"></script>
+</head>
+<body>
+	<div class="root">
+		<h1>Javascript Execution Context <a href="index.html" style="float: right; margin-right: 20px;">Home</a></h1>
+
+		<p>
+			Learning From Miss Xing YouTube channel. <a href="https://www.youtube.com/watch?v=IYkcByWUiz4&list=PLGTrAf5-F1YIGQBITEfHJBJOSW8LnGzEV&index=57&ab_channel=MissXing" class="exclude">JS Execution Context</a> 
+		</p>
+		<br>
+		<h3>What is Execution Context?</h3>
+		<p>
+			1. <span>An Execution Context is created when javascript code is executed.</span><br>
+			2. <span>All Execution Context are pushed into Execution Context Stack.</span>
+		</p> 
+		<br>
+		<div class="type">
+			<h3>Two Type of Execution Context</h3>
+			<ol>
+				<li>
+					<b>Global Execution Context(GEC)</b>
+					<ul>
+						<li><mark><i>Default, loads first as the JS code executed.</i></mark></li>
+						<li><mark><i>Only 1 Global EC for an application.</i></mark></li>
+						<li><mark><i>Create a global object i.e. "window" object.</i></mark></li>
+						<li><mark><i>this" keyword - global object: window.</i></mark></li>
+					</ul>
+				</li>
+				<br>
+				<li>
+					<b>Functional Execution Context(FEC)</b>
+					<ul>
+						<li><mark><i>Created when function is called, each function has its own FEC.</i></mark></li>
+						<li><mark><i>arguments object.</i></mark></li>
+					</ul>
+				</li>
+			</ol>
+		</div>
+
+		<br>
+		<div class="stack">
+			<h3>Execution Stack</h3>
+			<p>
+			*	Also known as Calling stack, is a stack with LIFO structure. <br>
+			*	Used to store all Exection Context created during code execution. <br>
+			*	JS engine execute the function whose executioin context is at the top of the stack. <br>
+	&nbsp;&nbsp;&nbsp;&nbsp;When this function is completed, its execution context is popped off from the stack, <br>
+	&nbsp;&nbsp;&nbsp;&nbsp;and the control reaches to context below in it current stack. 
+			</p>
+		</div>
+
+		<br>
+		<div class="create">
+			<h3>Execution Context Stage</h3>
+			<ul>
+				<li>
+					<b>Creation Phase</b>
+					<ol>
+						<li>
+							JS Engine compile code, does not execute the code.<br>
+							Records variable declarations, functions (only variable declared with keyword "var")
+						</li>
+					</ol>
+				</li>
+				<li>
+					<b>Execution Phase</b>
+					<ol>
+						<li>Execute the code line by line.</li>
+						<li>Update Variable values</li>
+						<li>Execute the variable declared with "let" and "const"</li>
+					</ol>
+				</li>
+			</ul>
+		</div>
+
+		<br>
+		<div class="code">
+			<h3> During Creation/Execution Phase </h3>
+			<div class="var">
+				<p><b>var</b></p>
+				<p>
+				1. Do I have any variable declared with "var"? skip those in function declaration but not in if, for, while code block.
+				If "Yes" Put it in Lexical Environment with value undefined.
+				</p>
+				<img src="img/img1.png" alt="pictorial illustration" width="1000" height="600">
+				<pre>
+				  <code>
+					console.log(myname); // undefined
+					var myname = 'Sushil';
+					console.log(myname); // Sushil
+				  </code>
+				</pre>
+			</div>
+			<div class="let">
+				<p><b>let</b></p>
+				<p>1. Do I have any variable declared with "let/const"? If Yes put them in Temporal Dead Zone.</p>
+				<pre>
+				  	<code>
+						console.log(myname); // Uncaught ReferenceError: Cannot access 'myname' before initialization
+						let myname = 'Sushil';
+			  		</code>
+				</pre>
+			</div>
+			<div class="code-block">
+				<p><b>Code Block for var</b></p>
+				<p>Code Block(if, for, while) won't create scope for "var" variable except for "function"</p>
+				<pre>
+				  	<code>
+						console.log(myname); // undefined
+						if(true) {
+							var myname = 'Sushil';
+						}
+						console.log(myname); // Sushil
+			  		</code>
+				</pre>
+				<br>
+				<p><b>Code Block for let</b></p>
+				<p>Code Block will create its own Execution stack and "let" variable scope remains within this stack only.</p>
+				<img src="img/img2.png" alt="pictorial illustration" width="1000" height="600">
+				<pre>
+				  	<code>
+						console.log(myname); // Uncaught ReferenceError: myname is not defined
+						if(true) {
+							let myname = 'Sushil';
+						}
+			  		</code>
+			  		<code>
+						if(true) {
+							let myname = 'Sushil';
+						}
+						console.log(myname); // Uncaught ReferenceError: myname is not defined
+			  		</code>
+				</pre>
+			</div>
+			<div class="function">
+				<p><b>function</b></p>
+				var
+				<pre>
+					<code>
+						function foo(arg) {
+							console.log(myname); // undefined
+							if (arg) {
+								var myname = "Sushil";
+							}
+							console.log(myname); // Sushil
+						}
+
+						foo(1);
+						console.log(myname); // Uncaught ReferenceError: myname is not defined
+					</code>
+				</pre>
+				let
+				<pre>
+					<code>
+						function foo(arg) {
+							console.log(myname); // Uncaught ReferenceError: myname is not defined
+							if (arg) {
+								let myname = "Sushil";
+								console.log(myname); // Sushil
+							}
+							console.log(myname); // Uncaught ReferenceError: myname is not defined
+							myname is not found in this EC, so it will be looked in global EC if not found
+							error is thrown
+						}
+
+						foo(1);
+						console.log(myname); // Uncaught ReferenceError: myname is not defined
+					</code>
+				</pre>
+			</div>
+		</div>
+
+		<br>
+		<div class="function-compare">
+			<h3>Function Declaration vs Function Expression</h3>
+			<div class="func-declaration">
+				<span><b>Function Declaration</b> is Hoisted.</span>
+				<pre>
+					<code>
+						foo(); // hello
+						function foo() {
+							console.log("hello")
+						}
+					</code>
+				</pre>
+			</div>
+			<div class="func-expression">
+				<span><b>Function Expression</b> is not Hoisted.</span>
+				<pre>
+					<code>
+						foo(); // Uncaught TypeError: foo is not a function
+						var foo = function () {
+							console.log("hello")
+						}
+					</code>
+				</pre>
+				<p>
+					<mark>Note:</mark> function foo is defined with "var", so at the time of creation phase in Excecution Context, its value is undefined.<br>
+					And at the time of execution phase, code is read line by line and foo method is called which is undefined hence throws error.
+				</p>
+				<br>
+				<pre>
+					<code>
+						foo(); // Uncaught ReferenceError: Cannot access 'foo' before initialization
+						let foo = function () {
+							console.log("hello")
+						}
+					</code>
+				</pre>
+				<p>
+					<mark>Note:</mark> function defined with "let" or "const"  will be placed in Temporal dead zone (TDZ).<br>
+					And at the time of execution phase, code is read line by line and foo property is not found in Lexical Environment hence throws ReferenceError.
+				</p>
+			</div>
+		</div>
+
+		<br>
+		<div class="lexical-scope">
+			<h3>Lexical Scope</h3>
+			<img src="img/img3.png" alt="pictorial illustration" width="1000" height="600">
+		</div>
+	</div>
+</body>
+</html>

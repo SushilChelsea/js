@@ -1,0 +1,18 @@
+span { background-color: #7ed67e; }
+.root { margin-left: 20px; line-height:150% }
+
+a:link:not(.exclude), a:visited:not(.exclude) {
+  background-color: white;
+  color: black;
+  border: 2px solid green;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  width: 200px;
+}
+
+a:hover:not(.exclude), a:active:not(.exclude) {
+  background-color: green;
+  color: white;
+}

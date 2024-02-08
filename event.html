@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Event Loop</title>
+	<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+	<div class="root">
+		<div class="event-loop">
+			<h1>Event loop <a href="index.html" style="float: right; margin-right: 20px;">Home</a></h1>
+			<button id="btn">click me</button>
+		</div>
+		<br>
+		<div class="event-img">
+			<img src="img/event1.png" alt="pictorial illustration" width="1000" height="600">
+			<img src="img/event2.png" alt="pictorial illustration" width="1000" height="600">
+		</div>
+		<br>
+		<div class="cite">
+			References: <a href="http://latentflip.com/loupe/?code=JC5vbignYnV0dG9uJywgJ2NsaWNrJywgZnVuY3Rpb24gb25DbGljaygpIHsKICAgIHNldFRpbWVvdXQoZnVuY3Rpb24gdGltZXIoKSB7CiAgICAgICAgY29uc29sZS5sb2coJ1lvdSBjbGlja2VkIHRoZSBidXR0b24hJyk7ICAgIAogICAgfSwgMjAwMCk7Cn0pOwoKY29uc29sZS5sb2coIkhpISIpOwoKc2V0VGltZW91dChmdW5jdGlvbiB0aW1lb3V0KCkgewogICAgY29uc29sZS5sb2coIkNsaWNrIHRoZSBidXR0b24hIik7Cn0sIDUwMDApOwoKY29uc29sZS5sb2coIldlbGNvbWUgdG8gbG91cGUuIik7!!!PGJ1dHRvbj5DbGljayBtZSE8L2J1dHRvbj4%3D" class="exclude"><cite>Event Loop Working Demonstration</cite></a> 
+		</div>
+	</div>
+
+	<script>		
+		console.log("start");
+
+		const btn = document.getElementById("btn");
+		btn.addEventListener("click", ()=>{
+			console.log("You clicked a button."); 
+			// setTimeout(()=>{
+			// 	console.log("You clicked a button.");
+			// }, 0);
+		});
+
+		setTimeout(()=>{
+			console.log("setTimeout started!!");
+			for (var i = 0; i < 300000; i++) {
+				// console.log(i);	
+			}
+			console.log("setTimeout Finish!!!");
+		},2000);
+
+		console.log("end");
+
+
+		// OUTPUT , if button clicked after setTimout stared.
+		/*
+		start
+		end
+		setTimeout started!!
+		setTimeout Finish!!!
+		You clicked a button.
+		*/
+
+		// OUTPUT , if button clicked before setTimout stared.
+		/*
+		start
+		end
+		You clicked a button.
+		setTimeout started!!
+		setTimeout Finish!!!
+		*/
+	</script>
+</body>
+</html>
